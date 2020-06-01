@@ -5,8 +5,7 @@ namespace BlogsApp.Infrastracture
 {
     public class BloggingContext : DbContext
     {
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Post> Posts { get; set; }
+        public BloggingContext(DbContextOptions options) : base(options) { }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,6 +21,9 @@ namespace BlogsApp.Infrastracture
             modelBuilder.Entity<Post>().HasData(new Post { BlogId = 1, PostId = 4, Title = "Some scientific title 4", Content = "Vestibulum ut tellus vulputate, pretium nunc ac, ultrices diam. Vivamus non egestas lectus, ac ultricies quam. Pellentesque ac ex in magna pellentesque volutpat quis scelerisque elit. Aliquam erat volutpat. Aliquam ac consequat neque. Nulla eros urna, egestas nec metus id, aliquet consectetur urna. Maecenas tempor nibh et convallis congue. Donec eu mi fermentum, congue sapien nec, malesuada leo. Praesent nec nunc hendrerit quam malesuada semper sit amet eget augue. Ut laoreet rutrum nunc, quis lacinia lacus pellentesque gravida. Vivamus luctus magna in mauris interdum, vitae rhoncus lacus ornare. Cras sagittis cursus magna, quis mattis orci lacinia a." });
             modelBuilder.Entity<Post>().HasData(new Post { BlogId = 1, PostId = 5, Title = "Some scientific title 5", Content = "Maecenas dapibus turpis ut risus tincidunt placerat ut sit amet dui. Vivamus eget elit non quam efficitur tristique nec id velit. Nunc in rhoncus libero. Proin nec ante nunc. Donec ac erat elit. Nunc blandit diam tortor, accumsan elementum sem facilisis vel. Donec nec consequat neque. Integer ultrices pulvinar lacus. Nam id dignissim turpis, ac iaculis ex. Donec sit amet pulvinar nunc. Vivamus hendrerit, ligula a pharetra dapibus, mauris tortor condimentum eros, nec lacinia odio ante malesuada elit. Nunc eleifend fringilla odio, sit amet posuere urna aliquet vel. Quisque in eros in mauris suscipit cursus. Proin ligula erat, luctus a viverra sit amet, finibus vel quam. Fusce egestas luctus leo, ut dictum sapien." });
         }
+
+        public DbSet<Blog> Blogs { get; set; }
+        public DbSet<Post> Posts { get; set; }
     }
 
     public class Blog
