@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PostService } from '../../services/post.service';
+import { PostModel } from 'src/app/features/models/post.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-list',
@@ -7,16 +9,21 @@ import { PostService } from '../../services/post.service';
   styleUrls: ['./post-list.component.scss']
 })
 export class PostListComponent implements OnInit {
-  private posts;
+  private posts: PostModel[];
 
-  constructor(private postService: PostService) {
+  constructor(
+    postService: PostService,
+    private router: Router) {
+      
     postService.getPosts().subscribe(result => {
       this.posts = result.posts;
-      console.log(this.posts);
     })
   }
 
   ngOnInit(): void {
   }
 
+  goToPost(id: number) {
+    this.router.navigate(['post', id]);
+  }
 }
