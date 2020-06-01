@@ -1,17 +1,15 @@
-using System;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Hosting;
-using BlogsApp.Infrastracture;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
+using BlogsApp.Infrastracture;
 using EntityGraphQL.Schema;
 
-[assembly: WebJobsStartup(typeof(BlogsApp.API.Startup))]
+[assembly: FunctionsStartup(typeof(BlogsApp.API.Startup))]
 namespace BlogsApp.API
 {
-    public class Startup : IWebJobsStartup
+    public class Startup : FunctionsStartup
     {
-        public void Configure(IWebJobsBuilder builder)
+        public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddDbContext<BloggingContext>(opt => opt.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Blogging;Integrated Security=True"));
             builder.Services.AddSingleton(SchemaBuilder.FromObject<BloggingContext>());

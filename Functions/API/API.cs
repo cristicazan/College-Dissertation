@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -7,29 +8,53 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using BlogsApp.Infrastracture;
+using EntityGraphQL.Schema;
+using EntityGraphQL;
 
 namespace BlogsApp.API
 {
-    public static class API
+    public class API
     {
-        [FunctionName("API")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+        private readonly BloggingContext context;
+        private readonly SchemaProvider<BloggingContext> schemaProvider;
+
+        public API(BloggingContext context, SchemaProvider<BloggingContext> schemaProvider)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            this.context = context;
+            this.schemaProvider = schemaProvider;
+        }
 
-            string name = req.Query["name"];
+        [FunctionName("get")]
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req)
+        {
+            var queryParam = req.Query["query"];
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            if (string.IsNullOrEmpty(queryParam))
+            {
+                return new BadRequestObjectResult("query parameter is missing. please pass it accordind to GraphQL standards in order to be able to retrieve data");
+            }
+            
+            try
+            {
+                var query = new QueryRequest
+                {
+                    Query = queryParam
+                };
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+                var result = schemaProvider.ExecuteQuery(query, context, null, null);
 
-            return new OkObjectResult(responseMessage);
+                if (result.Errors.Any())
+                {
+                    return new BadRequestObjectResult(JsonConvert.SerializeObject(result.Errors));
+                }
+
+                return new OkObjectResult(JsonConvert.SerializeObject(result.Data));
+            }
+            catch (Exception)
+            {
+                return new BadRequestResult();
+            }
         }
     }
 }
