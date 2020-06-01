@@ -5,14 +5,14 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class BlogService {
+export class PostService {
   private apiURL = 'http://localhost:7071/api';
-  private queryParam = '{ blogs { posts } }';
+  private queryParam = '{ posts }';
 
   constructor(
     private http: HttpClient) { }
 
-  getBlogs(): Observable<any> {
+  getPosts(): Observable<any> {
     const url = `${this.apiURL}/get?query=${this.queryParam}`;
     return this.http.get(url);
   }

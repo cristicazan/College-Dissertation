@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BlogService } from './features/blog/services/blog.service';
+import { PostService } from './features/post/services/post.service';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +9,8 @@ import { BlogService } from './features/blog/services/blog.service';
 export class AppComponent {
   title = 'WebClientApp';
 
-  constructor(private blogService: BlogService) {
-    blogService.getBlogs().subscribe(result => {
+  constructor(private postService: PostService) {
+    postService.getPosts().subscribe(result => {
       console.log(result);
     })
   }
