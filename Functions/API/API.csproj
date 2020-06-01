@@ -15,4 +15,7 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastracture\Infrastracture.csproj" />
+  </ItemGroup>
 </Project>
