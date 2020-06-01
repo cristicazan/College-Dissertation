@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using BlogsApp.Infrastracture;
 using EntityGraphQL.Schema;
@@ -34,7 +31,7 @@ namespace BlogsApp.API
             {
                 return new BadRequestObjectResult("query parameter is missing. please pass it accordind to GraphQL standards in order to be able to retrieve data");
             }
-            
+
             try
             {
                 var query = new QueryRequest
